@@ -8,10 +8,10 @@ const initialState = {
   dsChoXetDuyet: [],
   dsDaXetDuyet: [],
   courseList: {},
-  nguoiDungChuaGhiDanh:[],
+  nguoiDungChuaGhiDanh: [],
   hocVienChoXetDuyet: [],
-  hocVienDaThamGiaKhoaHoc:[],
-  errorDeleteCourse: ""
+  hocVienDaThamGiaKhoaHoc: [],
+  errorDeleteCourse: "",
 };
 export const adminReducer = (state = initialState, { type, payload }) => {
   return produce(state, (draft) => {
@@ -33,20 +33,20 @@ export const adminReducer = (state = initialState, { type, payload }) => {
     if (type === "SET_COURSE_LIST_ADMIN") {
       draft.courseList = payload;
     }
-    if(type==="SET_NGUOI_DUNG_CHUA_GHI_DANH"){
-      draft.nguoiDungChuaGhiDanh = payload
+    if (type === "SET_NGUOI_DUNG_CHUA_GHI_DANH") {
+      draft.nguoiDungChuaGhiDanh = payload;
     }
-    if(type==="SET_HOC_VIEN_CHO_XET_DUYET"){
-      draft.hocVienChoXetDuyet = payload
+    if (type === "SET_HOC_VIEN_CHO_XET_DUYET") {
+      draft.hocVienChoXetDuyet = payload;
     }
-    if(type==="SET_HOC_VIEN_DA_THAM_GIA"){
-      draft.hocVienDaThamGiaKhoaHoc = payload
+    if (type === "SET_HOC_VIEN_DA_THAM_GIA") {
+      draft.hocVienDaThamGiaKhoaHoc = payload;
     }
-    if(type==="ERROR_DELETE_COURSE"){
+    if (type === "ERROR_DELETE_COURSE") {
       draft.errorDeleteCourse = payload;
     }
-    if(type==="SELECTED_COURSE"){
-      draft.selectedCourse = payload
+    if (type === "SELECTED_COURSE") {
+      draft.selectedCourse = payload;
     }
   });
 };

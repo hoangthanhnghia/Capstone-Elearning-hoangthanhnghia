@@ -12,20 +12,19 @@ import {
 import HomeBooking from "./features/Booking/HomeBooking";
 import RouteComponent from "./HOCs/RouteComponent";
 import Signin from "./features/Auth/Signin";
-import Category from "./features/Booking/components/Category";
 import Signup from "./features/Auth/Signup";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchProfile } from "./features/Auth/thunk";
-import CourseListMySefl from "./features/Booking/CourseListMySefl";
+import DiffCourseList from "./features/Booking/DiffCourseList";
 import User from "./features/Admin/User";
 
 import Course from "./features/Admin/Course";
 
 function App() {
   const dispatch = useDispatch();
-  const {user} = useSelector(state=>state.auth);
-    
+  const { user } = useSelector((state) => state.auth);
+
   useEffect(() => {
     dispatch(fetchProfile);
   }, []);
@@ -49,13 +48,9 @@ function App() {
         ></Route>
         <Route
           path="/course-list"
-          element={<RouteComponent Component={CourseListMySefl} />}
+          element={<RouteComponent Component={DiffCourseList} />}
         ></Route>
-        <Route
-          path="/danhmuckhoahoc/:id"
-          element={<RouteComponent Component={Category} />}
-        ></Route>
-        
+
         <Route
           path="/admin"
           element={

@@ -123,7 +123,7 @@ const Course = () => {
             title: "Oops...",
             text: error.response.data,
           });
-        });      
+        });
     },
   });
 
@@ -177,17 +177,17 @@ const Course = () => {
             title: "Oops...",
             text: error.response.data,
           });
-        });      
+        });
     },
   });
 
   const handleChangeDatePicker = (value) => {
-    let ngayTao = dayjs(value).format("DD/MM/YYYY");    
+    let ngayTao = dayjs(value).format("DD/MM/YYYY");
     return formik.setFieldValue("ngayTao", ngayTao);
   };
 
   const handleChangeDatePickerEdit = (value) => {
-    let ngayTao = dayjs(value).format("DD/MM/YYYY");    
+    let ngayTao = dayjs(value).format("DD/MM/YYYY");
     return formikEdit.setFieldValue("ngayTao", ngayTao);
   };
 
@@ -198,7 +198,7 @@ const Course = () => {
   const fetchData = () => {
     eLearningServ
       .getCategory()
-      .then((res) => {        
+      .then((res) => {
         setState({
           ...state,
           danhMuc: res.data,
@@ -244,7 +244,7 @@ const Course = () => {
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = (evt) => {
-      setImgSrc(evt.target.result);      
+      setImgSrc(evt.target.result);
     };
     return formik.setFieldValue("hinhAnh", file);
   };
@@ -329,7 +329,7 @@ const Course = () => {
                       dispatch({
                         type: "SELECTED_COURSE",
                         payload: item,
-                      });                      
+                      });
                     }}
                   >
                     Sửa
@@ -573,7 +573,6 @@ const Course = () => {
         </div>
       </Modal>
 
-      {/* MODAL ADD COURSE  */}
       <Modal
         title="Thêm khóa học"
         style={{
@@ -589,7 +588,7 @@ const Course = () => {
       >
         <div className="container addCourse">
           <div className="title">
-            <h2>Product Order Form</h2>
+            <h2>Add To Course List</h2>
           </div>
           <div className="d-flex">
             <form onSubmit={formik.handleSubmit} action method>
@@ -733,8 +732,7 @@ const Course = () => {
               <button
                 style={{
                   color: "black",
-                  background:
-                    "linear-gradient(to bottom right, #5195A8 0%, #70EAFF 100%)",
+                  background: "#5D5D63",
                 }}
                 type="submit"
               >
@@ -752,7 +750,6 @@ const Course = () => {
         </div>
       </Modal>
 
-      {/* MODAL EDIT COURSE  */}
       <Modal
         title="Edit Course"
         style={{
@@ -779,7 +776,11 @@ const Course = () => {
                   name="maKhoaHoc"
                   value={formikEdit.values.maKhoaHoc}
                   disabled={true}
-                  style={{ color: "red", cursor:'not-allowed', backgroundColor:'#8080803b' }}
+                  style={{
+                    color: "red",
+                    cursor: "not-allowed",
+                    backgroundColor: "#8080803b",
+                  }}
                 />
               </label>
               <label>

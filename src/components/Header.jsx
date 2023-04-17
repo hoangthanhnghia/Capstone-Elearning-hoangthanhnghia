@@ -30,18 +30,15 @@ const Header = () => {
   const url = window.location.href;
   return (
     <>
-      <div className="header">
+      <div style={{ background: "pink" }} className="header">
         <div className="container mx-auto content">
           <div className="left flex">
-            <p className="mr-5" onClick={() => navigate("/")}>
-              {/* <img
-                className="imgLogo cursor-pointer"
-                src="https://demo2.cybersoft.edu.vn/logo.png"
-                alt=""
-              ></img> */}
-              
+            <p
+              style={{ color: "black" }}
+              className="mr-5"
+              onClick={() => navigate("/")}
+            >
               CyberLearning
-              
             </p>
           </div>
           <div className="right">
@@ -60,11 +57,11 @@ const Header = () => {
                     Danh sách khóa học
                   </p>
                 ) : null}
-                {userLogin?.maLoaiNguoiDung === "GV" ? (
+                {userLogin?.maLoaiNguoiDung === "HV" ? (
                   <p
                     style={
                       url.includes("admin") === true
-                        ? { fontWeight: "bold", color: "#ffd60a" }
+                        ? { fontWeight: "bold", color: "#76B852" }
                         : null
                     }
                     className="cursor-pointer"
@@ -99,22 +96,6 @@ const Header = () => {
               </div>
             ) : (
               <div>
-                <Select
-                  style={{ width: "200px" }}
-                  options={state.danhMuc?.map((item, index) => ({
-                    label: (
-                      <span
-                        onClick={() => {
-                          navigate("/danhmuckhoahoc/" + item.maDanhMuc);
-                        }}
-                      >
-                        {item.tenDanhMuc}
-                      </span>
-                    ),
-                    value: item.maDanhMuc,
-                  }))}
-                  placeholder="DANH MỤC"
-                />
                 <NavLink className="text-black ml-4" to="/signin">
                   Signin
                 </NavLink>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import HomeAdmin from "./HomeAdmin";
 import { useDispatch, useSelector } from "react-redux";
-import {  
+import {
   deleteUser,
   fetchGhiDanhKhoaHoc,
   fetchHuyGhiDanh,
@@ -29,10 +29,10 @@ const User = () => {
     dsChoXetDuyet,
     dsDaXetDuyet,
     seletedUser,
-  } = useSelector((state) => state.admin);  
-  const onSearchChange = (evt) => {    
+  } = useSelector((state) => state.admin);
+  const onSearchChange = (evt) => {
     const searchTerm = evt.target.value;
-    fetchUserListSearch(searchTerm.trim());    
+    fetchUserListSearch(searchTerm.trim());
   };
 
   const [state, setState] = useState({
@@ -109,25 +109,27 @@ const User = () => {
     }),
     validateOnBlur: true,
     validateOnChange: true,
-    onSubmit: async (values) => {      
-      await adminServ.postThemNguoiDung(values).then((res)=>{
-        Swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: 'Added',
-          showConfirmButton: false,
-          timer: 1500
-        })
-        dispatch(fetchUserList(searchParam.get("page"), "GP02"));
-        setModal1Open(false);
-        }).catch((error)=>{
+    onSubmit: async (values) => {
+      await adminServ
+        .postThemNguoiDung(values)
+        .then((res) => {
           Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: error.response.data,          
-          })
-        
-      })            
+            position: "center",
+            icon: "success",
+            title: "Added",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          dispatch(fetchUserList(searchParam.get("page"), "GP02"));
+          setModal1Open(false);
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: error.response.data,
+          });
+        });
     },
   });
 
@@ -173,39 +175,42 @@ const User = () => {
     }),
     validateOnBlur: true,
     validateOnChange: true,
-    onSubmit: async (values)=>{      
-     await adminServ.putUpdateNguoiDung(values).then((res)=>{
-      Swal.fire({
-        position: 'center',
-        icon: 'success',
-        title: 'Updated',
-        showConfirmButton: false,
-        timer: 1500
-      })
-      setModalEdit(false);
-      dispatch(fetchUserList(searchParam.get("page"), "GP02"));
-      }).catch((error)=>{
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: error.response.data,          
+    onSubmit: async (values) => {
+      await adminServ
+        .putUpdateNguoiDung(values)
+        .then((res) => {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Updated",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          setModalEdit(false);
+          dispatch(fetchUserList(searchParam.get("page"), "GP02"));
         })
-      })      
-    }
+        .catch((error) => {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: error.response.data,
+          });
+        });
+    },
   });
 
-  const handleChangeCourse = (values) => {    
+  const handleChangeCourse = (values) => {
     setState({
       ...state,
       maKhoaHocChuaGhiDanh: values,
-    });    
+    });
   };
-  const handleChangeLoaiNguoiDung = (evt) => {    
+  const handleChangeLoaiNguoiDung = (evt) => {
     return formik.setFieldValue("maLoaiNguoiDung", evt.target.value);
   };
-  const handleChangePosition =(values)=>{
-     formikEdit.setFieldValue("maLoaiNguoiDung", values)
-  }
+  const handleChangePosition = (values) => {
+    formikEdit.setFieldValue("maLoaiNguoiDung", values);
+  };
   const [searchParam, setSearchParam] = useSearchParams();
   useEffect(() => {
     dispatch(fetchUserList(searchParam.get("page"), "GP02"));
@@ -222,7 +227,7 @@ const User = () => {
       <div className="text-right">
         <Search
           placeholder="input search text"
-          allowClear          
+          allowClear
           onChange={onSearchChange}
           style={{
             width: 200,
@@ -230,190 +235,203 @@ const User = () => {
         />
         <Button onClick={() => setModal1Open(true)}>Thêm người dùng</Button>
       </div>
-          {state.searchListUser.length===0 ? <>
-            <table>
-        <thead>
-          <tr>
-            <th>STT</th>
-            <th>Tài khoản</th>
-            <th>Người dùng</th>
-            <th>Họ tên</th>
-            <th>Email</th>
-            <th>Số điện thoại</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {userList?.items?.map((item, index) => {
-            return (
-              <tr key={item.taiKhoan}>
-                <td>{index + 1}</td>
-                <td>{item.taiKhoan}</td>
-                <td>{item.maLoaiNguoiDung}</td>
-                <td>{item.hoTen}</td>
-                <td>{item.email}</td>
-                <td>{item.soDT}</td>
-                <td>
-                  <Button
-                    onClick={async () => {
-                      setOpen(true);
-
-                      setState({
-                        ...state,
-                        taiKhoanUser: item.taiKhoan,
-                      });
-                      await dispatch(fetchKhoaHocChuaGhiDanh(item.taiKhoan));
-                      const infoTaiKhoan = {};
-                      infoTaiKhoan.taiKhoan = item.taiKhoan;
-                      await dispatch(fetchKhoaHocChoXetDuyet(infoTaiKhoan));
-                      await dispatch(fetchKhoaHocDaXetDuyet(infoTaiKhoan));
-                    }}
-                  >
-                    Ghi danh
-                  </Button>
-                  <Button
-                    onClick={async () => {
-                      await dispatch({
-                        type: "SET_SELECTED_USER",
-                        payload: item,
-                      });
-                      console.log(formikEdit.values);
-                      setModalEdit(true);
-                    }}
-                  >
-                    Sửa
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      Swal.fire({
-                        title: "Are you sure?",
-                        text: "You won't be able to revert this!",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
-                        confirmButtonText: "Yes, delete it!",
-                      }).then(async(result) => {
-                        if (result.isConfirmed) {                          
-                          await adminServ.deleteNguoiDung(item.taiKhoan).then((res)=>{
-                            dispatch(
-                              fetchUserList(searchParam.get("page"), "GP02")
-                            );
-                            Swal.fire(
-                              "Deleted!",
-                              "Your file has been deleted.",
-                              "success"
-                            );
-                          }).catch((error)=>{
-                            Swal.fire({
-                              icon: 'error',
-                              title: 'Oops...',
-                              text: error.response.data,
-                              
-                            })
-                          })
-                          
-                        }
-                      });
-                    }}
-                  >
-                    Xóa
-                  </Button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-          </> : <>
+      {state.searchListUser.length === 0 ? (
+        <>
           <table>
-        <thead>
-          <tr>
-            <th>STT</th>
-            <th>Tài khoản</th>
-            <th>Người dùng</th>
-            <th>Họ tên</th>
-            <th>Email</th>
-            <th>Số điện thoại</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {state.searchListUser?.map((item, index) => {
-            return (
-              <tr key={item.taiKhoan}>
-                <td>{index + 1}</td>
-                <td>{item.taiKhoan}</td>
-                <td>{item.maLoaiNguoiDung}</td>
-                <td>{item.hoTen}</td>
-                <td>{item.email}</td>
-                <td>{item.soDT}</td>
-                <td>
-                  <Button
-                    onClick={async () => {
-                      setOpen(true);
-                      setState({
-                        ...state,
-                        taiKhoanUser: item.taiKhoan,
-                      });
-                      await dispatch(fetchKhoaHocChuaGhiDanh(item.taiKhoan));
-                      const infoTaiKhoan = {};
-                      infoTaiKhoan.taiKhoan = item.taiKhoan;
-                      await dispatch(fetchKhoaHocChoXetDuyet(infoTaiKhoan));
-                      await dispatch(fetchKhoaHocDaXetDuyet(infoTaiKhoan));
-                    }}
-                  >
-                    Ghi danh
-                  </Button>
-                  <Button
-                    onClick={async () => {
-                      await dispatch({
-                        type: "SET_SELECTED_USER",
-                        payload: item,
-                      });
-                      console.log(formikEdit.values);
-                      setModalEdit(true);
-                    }}
-                  >
-                    Sửa
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      Swal.fire({
-                        title: "Are you sure?",
-                        text: "You won't be able to revert this!",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
-                        confirmButtonText: "Yes, delete it!",
-                      }).then((result) => {
-                        if (result.isConfirmed) {
-                          dispatch(deleteUser(item.taiKhoan));
-                          dispatch(
-                            fetchUserList(searchParam.get("page"), "GP02")
-                          );
-                          Swal.fire(
-                            "Deleted!",
-                            "Your file has been deleted.",
-                            "success"
-                          );
-                        }
-                      });
-                    }}
-                  >
-                    Xóa
-                  </Button>
-                </td>
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Tài khoản</th>
+                <th>Người dùng</th>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Số điện thoại</th>
+                <th>Action</th>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-          </>}
-      
+            </thead>
+            <tbody>
+              {userList?.items?.map((item, index) => {
+                return (
+                  <tr key={item.taiKhoan}>
+                    <td>{index + 1}</td>
+                    <td>{item.taiKhoan}</td>
+                    <td>{item.maLoaiNguoiDung}</td>
+                    <td>{item.hoTen}</td>
+                    <td>{item.email}</td>
+                    <td>{item.soDT}</td>
+                    <td>
+                      <Button
+                        onClick={async () => {
+                          setOpen(true);
+
+                          setState({
+                            ...state,
+                            taiKhoanUser: item.taiKhoan,
+                          });
+                          await dispatch(
+                            fetchKhoaHocChuaGhiDanh(item.taiKhoan)
+                          );
+                          const infoTaiKhoan = {};
+                          infoTaiKhoan.taiKhoan = item.taiKhoan;
+                          await dispatch(fetchKhoaHocChoXetDuyet(infoTaiKhoan));
+                          await dispatch(fetchKhoaHocDaXetDuyet(infoTaiKhoan));
+                        }}
+                      >
+                        Ghi danh
+                      </Button>
+                      <Button
+                        onClick={async () => {
+                          await dispatch({
+                            type: "SET_SELECTED_USER",
+                            payload: item,
+                          });
+                          console.log(formikEdit.values);
+                          setModalEdit(true);
+                        }}
+                      >
+                        Sửa
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          Swal.fire({
+                            title: "Are you sure?",
+                            text: "You won't be able to revert this!",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes, delete it!",
+                          }).then(async (result) => {
+                            if (result.isConfirmed) {
+                              await adminServ
+                                .deleteNguoiDung(item.taiKhoan)
+                                .then((res) => {
+                                  dispatch(
+                                    fetchUserList(
+                                      searchParam.get("page"),
+                                      "GP02"
+                                    )
+                                  );
+                                  Swal.fire(
+                                    "Deleted!",
+                                    "Your file has been deleted.",
+                                    "success"
+                                  );
+                                })
+                                .catch((error) => {
+                                  Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: error.response.data,
+                                  });
+                                });
+                            }
+                          });
+                        }}
+                      >
+                        Xóa
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </>
+      ) : (
+        <>
+          <table>
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Tài khoản</th>
+                <th>Người dùng</th>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Số điện thoại</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {state.searchListUser?.map((item, index) => {
+                return (
+                  <tr key={item.taiKhoan}>
+                    <td>{index + 1}</td>
+                    <td>{item.taiKhoan}</td>
+                    <td>{item.maLoaiNguoiDung}</td>
+                    <td>{item.hoTen}</td>
+                    <td>{item.email}</td>
+                    <td>{item.soDT}</td>
+                    <td>
+                      <Button
+                        className="register-bg"
+                        onClick={async () => {
+                          setOpen(true);
+                          setState({
+                            ...state,
+                            taiKhoanUser: item.taiKhoan,
+                          });
+                          await dispatch(
+                            fetchKhoaHocChuaGhiDanh(item.taiKhoan)
+                          );
+                          const infoTaiKhoan = {};
+                          infoTaiKhoan.taiKhoan = item.taiKhoan;
+                          await dispatch(fetchKhoaHocChoXetDuyet(infoTaiKhoan));
+                          await dispatch(fetchKhoaHocDaXetDuyet(infoTaiKhoan));
+                        }}
+                      >
+                        Ghi danh
+                      </Button>
+                      <Button
+                        onClick={async () => {
+                          await dispatch({
+                            type: "SET_SELECTED_USER",
+                            payload: item,
+                          });
+                          console.log(formikEdit.values);
+                          setModalEdit(true);
+                        }}
+                      >
+                        Sửa
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          Swal.fire({
+                            title: "Are you sure?",
+                            text: "You won't be able to revert this!",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes, delete it!",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              dispatch(deleteUser(item.taiKhoan));
+                              dispatch(
+                                fetchUserList(searchParam.get("page"), "GP02")
+                              );
+                              Swal.fire(
+                                "Deleted!",
+                                "Your file has been deleted.",
+                                "success"
+                              );
+                            }
+                          });
+                        }}
+                      >
+                        Xóa
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </>
+      )}
+
       <Pagination
-      className="text-center"
+        className="text-center"
         current={
           searchParam.get("page") === null ? 1 : searchParam.get("page") * 1
         }
@@ -432,7 +450,7 @@ const User = () => {
       >
         <div className="itemGhiDanh">
           <p>Chọn khóa học</p>
-          <Select            
+          <Select
             style={{
               width: 500,
             }}
@@ -503,26 +521,26 @@ const User = () => {
                           objHuyGhiDanh.maKhoaHoc = item.maKhoaHoc;
                           objHuyGhiDanh.taiKhoan = state.taiKhoanUser;
                           const infoTaiKhoan = {};
-                          infoTaiKhoan.taiKhoan = state.taiKhoanUser;                                                    
-                            Swal.fire({
-                              title: "Are you sure?",
-                              text: "You won't be able to revert this!",
-                              icon: "warning",
-                              showCancelButton: true,
-                              confirmButtonColor: "#3085d6",
-                              cancelButtonColor: "#d33",
-                              confirmButtonText: "Yes, delete it!",
-                            }).then(async(result)=>{
-                              if(result.isConfirmed){
-                                await dispatch(fetchHuyGhiDanh(objHuyGhiDanh));
-                                await dispatch(
-                                  fetchKhoaHocChuaGhiDanh(state.taiKhoanUser)
-                                );
-                                await dispatch(fetchKhoaHocChoXetDuyet(infoTaiKhoan));
-                              }
-                            })
-                          
-                          
+                          infoTaiKhoan.taiKhoan = state.taiKhoanUser;
+                          Swal.fire({
+                            title: "Are you sure?",
+                            text: "You won't be able to revert this!",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes, delete it!",
+                          }).then(async (result) => {
+                            if (result.isConfirmed) {
+                              await dispatch(fetchHuyGhiDanh(objHuyGhiDanh));
+                              await dispatch(
+                                fetchKhoaHocChuaGhiDanh(state.taiKhoanUser)
+                              );
+                              await dispatch(
+                                fetchKhoaHocChoXetDuyet(infoTaiKhoan)
+                              );
+                            }
+                          });
                         }}
                       >
                         Xóa
@@ -557,23 +575,27 @@ const User = () => {
                           const infoTaiKhoan = {};
                           infoTaiKhoan.taiKhoan = state.taiKhoanUser;
                           Swal.fire({
-                            title: "Are you sure delete "+`\n`+`${item.tenKhoaHoc} ?`,
+                            title:
+                              "Are you sure delete " +
+                              `\n` +
+                              `${item.tenKhoaHoc} ?`,
                             text: "You won't be able to revert this!",
                             icon: "warning",
                             showCancelButton: true,
                             confirmButtonColor: "#3085d6",
                             cancelButtonColor: "#d33",
                             confirmButtonText: "Yes, delete it!",
-                          }).then(async(result)=>{
-                            if(result.isConfirmed){
+                          }).then(async (result) => {
+                            if (result.isConfirmed) {
                               await dispatch(fetchHuyGhiDanh(objHuyGhiDanh));
                               await dispatch(
                                 fetchKhoaHocChuaGhiDanh(state.taiKhoanUser)
                               );
-                              await dispatch(fetchKhoaHocDaXetDuyet(infoTaiKhoan));
+                              await dispatch(
+                                fetchKhoaHocDaXetDuyet(infoTaiKhoan)
+                              );
                             }
-                          })
-                          
+                          });
                         }}
                       >
                         Xóa
@@ -587,15 +609,13 @@ const User = () => {
         </div>
       </Modal>
 
-      {/* MODAL ADD USER  */}
-
       <Modal
         title="Thêm người dùng"
         style={{
           top: 20,
         }}
         open={modal1Open}
-        footer={null}        
+        footer={null}
         onCancel={() => setModal1Open(false)}
       >
         <div className="agileits-top">
@@ -683,20 +703,19 @@ const User = () => {
               <p className="text-red-600 font-bold">
                 {formik.errors.maLoaiNguoiDung}
               </p>
-            ) : null}          
+            ) : null}
             <input type="submit" defaultValue="SIGNUP" />
           </form>
         </div>
       </Modal>
 
-      {/* MODAL EDIT USER  */}
       <Modal
         title="Edit"
         style={{
           top: 20,
         }}
         open={modalEdit}
-        footer={null}        
+        footer={null}
         onCancel={() => setModalEdit(false)}
       >
         <div className="agileits-top">
@@ -774,7 +793,7 @@ const User = () => {
             />
             {formikEdit.touched.soDT && formikEdit.errors.soDT ? (
               <p className="text-red-600 font-bold">{formikEdit.errors.soDT}</p>
-            ) : null}           
+            ) : null}
             <Select
               style={{ width: "100%" }}
               options={state?.loaiNguoiDung?.map((item, index) => {
@@ -782,7 +801,7 @@ const User = () => {
                   label: item.tenLoaiNguoiDung,
                   value: item.maLoaiNguoiDung,
                 };
-              })}              
+              })}
               placeholder="Permission"
               value={formikEdit.values.maLoaiNguoiDung}
               onChange={handleChangePosition}
@@ -793,7 +812,7 @@ const User = () => {
               <p className="text-red-600 font-bold">
                 {formikEdit.errors.maLoaiNguoiDung}
               </p>
-            ) : null}            
+            ) : null}
             <input type="submit" defaultValue="SIGNUP" />
           </form>
         </div>

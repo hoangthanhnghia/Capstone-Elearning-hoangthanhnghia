@@ -26,7 +26,7 @@ const CourseItem = (props) => {
           />
           {url.includes("course-list") ? null : (
             <p>{props.item.danhMucKhoaHoc.tenDanhMucKhoaHoc}</p>
-          )}        
+          )}
         </div>
       }
     >
@@ -60,15 +60,6 @@ const CourseItem = (props) => {
         </Button>
       ) : (
         <div>
-          {/* <Button
-            className="mr-3"
-            onClick={() => {
-              setOpen(true);
-              dispatch(fetchDetailCourse(props.item.maKhoaHoc));
-            }}
-          >
-            Detail
-          </Button> */}
           <Modal
             title="Detail"
             centered
@@ -103,13 +94,6 @@ const CourseItem = (props) => {
               </div>
             </div>
           </Modal>
-          {/* <Button
-            onClick={() => {
-              navigate("/detail/" + props.item.maKhoaHoc);
-            }}
-          >
-            Booking
-          </Button> */}
         </div>
       )}
     </Card>

@@ -9,29 +9,28 @@ import Swal from "sweetalert2";
 const Signin = () => {
   const [loginInfo, setLoginInfo] = useState({ taiKhoan: "", matKhau: "" });
   const dispatch = useDispatch();
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
     setLoginInfo({ ...loginInfo, [name]: value });
   };
   const handleSubmit = async (evt) => {
-    evt.preventDefault();    
+    evt.preventDefault();
 
     await AuthService.login(loginInfo)
-      .then(async(res) => {
+      .then(async (res) => {
         await dispatch({
           type: "LOGIN",
           payload: res.data,
         });
         localStorage.setItem("TOKEN", res.data.accessToken);
-        localStorage.setItem("USER_LOGIN", JSON.stringify(res.data));        
-        if(res.data.maLoaiNguoiDung==="GV"){
-         return navigate ("/admin");
-        }else{
-         return navigate("/");
+        localStorage.setItem("USER_LOGIN", JSON.stringify(res.data));
+        if (res.data.maLoaiNguoiDung === "GV") {
+          return navigate("/admin");
+        } else {
+          return navigate("/");
         }
-                       
       })
       .catch((error) => {
         Swal.fire({
@@ -43,7 +42,7 @@ const Signin = () => {
   };
 
   return (
-    <div className="signin">      
+    <div className="signin">
       <div className="login-box">
         <span className="arrow" onClick={() => navigate("/")}>
           <ArrowLeftOutlined />
@@ -57,7 +56,7 @@ const Signin = () => {
               onChange={handleChange}
               required
             />
-            <label>Username</label>
+            <label className="mb-10">Username</label>
           </div>
           <div className="user-box">
             <input
@@ -67,7 +66,7 @@ const Signin = () => {
               required
             />
             <label>Password</label>
-          </div>         
+          </div>
           <button type="submit">
             {" "}
             <span />
